@@ -1,0 +1,19 @@
+body {
+  background-color: powderblue;
+}
+
+table {
+  margin-right: 2em;
+}
+
+td {
+  padding: 5px;
+  border: 1px solid green;
+}
+
+span.buttons {
+  float: right;
+  margin-right: -1.5em;
+  color: red;
+  font-weight: bold;
+}
