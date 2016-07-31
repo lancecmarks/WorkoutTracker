@@ -22,6 +22,7 @@ app.set('port',2500);
 
 
 app.get('/',function(req, res, next) {
+  console.log('Inside the Get');
   var context = {};
   if(!req.session.logExists) {  //check if log exists, if not setup the structure
     req.session.logExists = 1;
@@ -31,19 +32,22 @@ app.get('/',function(req, res, next) {
   context.logExists = req.session.logExists;
   context.curId = req.session.curId;
   context.workoutLog = req.session.workoutLog;
-  console.log('This is the get');
+  console.log('Get Updated Context:');
   console.log(context);      
   res.render('home',context);
 });
 
 app.post('/',function(req, res){
+  console.log('Inside the Post');
   if(req.body['AddWorkout']){
-  req.session.workoutLog.push({"id":req.session.curId, "name":req.body.name, "reps":req.body.reps, "weight":req.body.weight,
+    console.log('Inside AddWorkout');
+    req.session.workoutLog.push({"id":req.session.curId, "name":req.body.name, "reps":req.body.reps, "weight":req.body.weight,
     "date":req.body.date, "scale":req.body.scale});
   req.session.curId++;
   }
 
-  if(req.body['Delete']){
+  if(req.body['DeleteWorkout']){
+    console.log('Inside DeleteWorkout');
     req.session.workoutLog = req.session.workoutLog.filter(function(log){
       return log.id != req.body.id;
     })
@@ -54,7 +58,7 @@ app.post('/',function(req, res){
   context.logExists = req.session.logExists;
   context.curId = req.session.curId;
   context.workoutLog = req.session.workoutLog;
-  console.log('This is the post');
+  console.log('Post Updated Context:');
   console.log(context);
   res.render('home',context);
 });

@@ -41,7 +41,16 @@
         <td>{{this.weight}}</td>
         <td>{{this.date}}</td>
         <td>{{this.scale}}</td>
-        <td id="{{this.id}}"><button>Edit</button><button>Delete</button></td>
+        <td>
+          <form action="/" method="post">
+            <input type="hidden" name="id" value="{{this.id}}">
+            <button type="submit" name="EditWorkout" value="EditWorkout">Edit</button>
+          </form>
+          <form action="/" method="post">
+            <input type="hidden" name="id" value="{{this.id}}">
+            <button type="submit" name="DeleteWorkout" value="DeleteWorkout">Delete</button>
+          </form>
+        </td>
       </tr>
     {{/each}}
     </table> 
