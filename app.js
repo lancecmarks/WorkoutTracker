@@ -5,9 +5,9 @@ var handlebars = require("express-handlebars").create({defaultLayout:'main'});
 var mysql = require('mysql');
 var pool = mysql.createPool({
   host: 'localhost',
-  user: 'marksladbaws',
-  password: 'AppleGoatRainCow',
-  database: 'marksladbaws'
+  user: 'student',
+  password: 'default',
+  database: 'student'
 });
 var session = require('express-session');
 var bodyparser = require('body-parser');  //load body parser for POST
