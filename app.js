@@ -53,7 +53,7 @@ app.get('/',function(req, res, next) {
           return;
         }
         console.log('Table reset');
-      })
+      });
     });
   }
   pool.query('SELECT * FROM workoutLog', function(err, rows, fields){
@@ -66,13 +66,14 @@ app.get('/',function(req, res, next) {
   console.log('Get Updated Context:');
   console.log(context);      
   res.render('home',context);
+  });
 });
 
 app.post('/',function(req, res){
   console.log('Inside the Post');
   var context = {};
   //going to add new entry and then update context before render
-  if(req.body['AddWorkout']){
+  if(req.body.AddWorkout){
     console.log('Inside AddWorkout');
     var values = [req.body.name,req.body.reps,req.body.weight,req.body.date,req.body.scale];
     pool.query('Insert INTO workoutLog (`name`,`reps`,`weight`,`date`,`scale`) VALUES ?',[values], function(err, result){
@@ -93,14 +94,13 @@ app.post('/',function(req, res){
     });
   }
   //check for edit of workout
-  if(req.body['EditWorkout']){
+  if(req.body.EditWorkout){
     console.log('Inside EditWorkout');
-    var context = {};
     context.logExists = req.session.logExists;
     for (var log in req.session.workoutLog) {
       if (req.session.workoutLog.hasOwnProperty(log)){
         console.log('Log:');
-        console.log(log)
+        console.log(log);
         if (req.session.workoutLog[log].id===req.body.id){
           console.log('ID#:');
           console.log(req.session.workoutLog[log][i]);
@@ -118,7 +118,7 @@ app.post('/',function(req, res){
     res.render('edit',context);
     return;
   }
-  if(req.body['DeleteWorkout']){
+  if(req.body.DeleteWorkout){
     console.log('Inside DeleteWorkout');
     var idDelete = [req.body.id];
     pool.query('DELETE FROM workoutLog WHERE id =  ?',[idDelete], function(err, result){
