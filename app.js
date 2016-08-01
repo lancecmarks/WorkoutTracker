@@ -75,8 +75,8 @@ app.post('/',function(req, res, next){
   //going to add new entry and then update context before render
   if(req.body.AddWorkout){
     console.log('Inside AddWorkout');
-    var values = [req.body.name,req.body.reps,req.body.weight,req.body.date,req.body.scale];
-    pool.query('Insert INTO workoutLog (`name`,`reps`,`weight`,`date`,`scale`) VALUES ?',[values], function(err, result){
+    pool.query('Insert INTO `workoutLog` (`name`,`reps`,`weight`,`date`,`scale`) VALUES (?,?,?,?,?)',[req.body.name,req.body.reps,req.body.weight,
+      req.body.date,req.body.scale], function(err, result){
       if(err){
         next(err);
         return;
