@@ -2,6 +2,13 @@ var express = require('express');   //loads express
 var app = express();                //creates express object
 
 var handlebars = require("express-handlebars").create({defaultLayout:'main'});
+var mysql = require('mysql');
+var pool = mysql.createPool({
+  host: 'localhost',
+  user: 'student',
+  password: 'default',
+  database: 'student'
+});
 var session = require('express-session');
 var bodyparser = require('body-parser');  //load body parser for POST
 
@@ -26,12 +33,36 @@ app.get('/',function(req, res, next) {
   var context = {};
   if(!req.session.logExists) {  //check if log exists, if not setup the structure
     req.session.logExists = 1;
-    req.session.curId = 0;
-    req.session.workoutLog = [];
+    pool.query('DROP TABLE IF EXISTS workoutLog', function(err){
+      if(err){
+        console.log('Error at Drop Table');
+        next(err);
+        return;
+      }
+      var createString = 'CREATE TABLE workoutLog(' +
+        'id INT PRIMARY KEY AUTO_INCREMENT,' +
+        'name VARCHAR(255) NOT NULL,' +
+        'reps INT(11),' +
+        'weight INT(11),' +
+        'date DATE,' +
+        'scale BOOLEAN)';
+      pool.query(createString, function(err){
+        if(err){
+          console.log('Error at Create Table');
+          next(err);
+          return;
+        }
+        console.log('Table reset');
+      })
+    });
   }
+  pool.query('SELECT * FROM workoutLog', function(err, rows, fields){
+    if(err){
+      next(err);
+      return;
+    }
+  context.workoutLog = JSON.stringify(rows);
   context.logExists = req.session.logExists;
-  context.curId = req.session.curId;
-  context.workoutLog = req.session.workoutLog;
   console.log('Get Updated Context:');
   console.log(context);      
   res.render('home',context);
@@ -39,52 +70,102 @@ app.get('/',function(req, res, next) {
 
 app.post('/',function(req, res){
   console.log('Inside the Post');
+  var context = {};
+  //going to add new entry and then update context before render
   if(req.body['AddWorkout']){
     console.log('Inside AddWorkout');
-    req.session.workoutLog.push({"id":req.session.curId, "name":req.body.name, "reps":req.body.reps, "weight":req.body.weight,
-    "date":req.body.date, "scale":req.body.scale});
-  req.session.curId++;
+    var values = [req.body.name,req.body.reps,req.body.weight,req.body.date,req.body.scale];
+    pool.query('Insert INTO workoutLog (`name`,`reps`,`weight`,`date`,`scale`) VALUES ?',[values], function(err, result){
+      if(err){
+        next(err);
+        return;
+      }
+      pool.query('SELECT * FROM workoutLog', function(err, rows, fields){
+        if(err){
+          next(err);
+          return;
+        }
+        context.workoutLog = JSON.stringify(rows);
+        console.log('Post Insert Updated Context:');
+        console.log(context);      
+        res.render('home',context);
+      });
+    });
   }
-
+  //check for edit of workout
+  if(req.body['EditWorkout']){
+    console.log('Inside EditWorkout');
+    var context = {};
+    context.logExists = req.session.logExists;
+    for (var log in req.session.workoutLog) {
+      if (req.session.workoutLog.hasOwnProperty(log)){
+        console.log('Log:');
+        console.log(log)
+        if (req.session.workoutLog[log].id===req.body.id){
+          console.log('ID#:');
+          console.log(req.session.workoutLog[log][i]);
+          context[edit].name = req.session.workoutLog[log].name;
+          context[edit].reps = req.session.workoutLog[log].reps;
+          context[edit].weight = req.session.workoutLog[log].weight;
+          context[edit].date = req.session.workoutLog[log].date;
+          context[edit].scale = req.session.workoutLog[log].scale;
+        }
+      }
+    }
+    context.workoutLog = req.session.workoutLog;
+    console.log('Entire log copied:');
+    console.log(context);
+    res.render('edit',context);
+    return;
+  }
   if(req.body['DeleteWorkout']){
     console.log('Inside DeleteWorkout');
-    req.session.workoutLog = req.session.workoutLog.filter(function(log){
-      return log.id != req.body.id;
-    })
+    var idDelete = [req.body.id];
+    pool.query('DELETE FROM workoutLog WHERE id =  ?',[idDelete], function(err, result){
+      if(err){
+        next(err);
+        return;
+      }
+      pool.query('SELECT * FROM workoutLog', function(err, rows, fields){
+        if(err){
+          next(err);
+          return;
+        }
+        context.workoutLog = JSON.stringify(rows);
+        console.log('Post Delete Updated Context:');
+        console.log(context);      
+        res.render('home',context);
+      });
+    });
   }
-
-  //update context
-  var context = {};
-  context.logExists = req.session.logExists;
-  context.curId = req.session.curId;
-  context.workoutLog = req.session.workoutLog;
-  console.log('Post Updated Context:');
-  console.log(context);
-  res.render('home',context);
 });
 
-/*
-app.get('/count',function(req, res){       //this is the get request as in page load
+app.get('/reset-table', function(req, res, next){
   var context = {};
-  context.count = req.session.count || 0;
-  req.session.count = context.count + 1;
-  res.render('counter', context);
+  pool.query('DROP TABLE IF EXISTS workoutLog', function(err){
+    if(err){
+      console.log('Error at Drop Table');
+      next(err);
+      return;
+    }
+    var createString = 'CREATE TABLE workoutLog(' +
+      'id INT PRIMARY KEY AUTO_INCREMENT,' +
+      'name VARCHAR(255) NOT NULL,' +
+      'reps INT(11),' +
+      'weight INT(11),' +
+      'date DATE,' +
+      'scale BOOLEAN)';
+    pool.query(createString, function(err){
+      if(err){
+        console.log('Error at Create Table');
+        next(err);
+        return;
+      }
+      context.results = 'Table reset';
+      res.render('home',context);
+    });
+  });
 });
-
-app.post('/count', function(req, res){    //if a button is pushed, command is posted and changes rendered
-  var context = {};
-  if (req.body.command === "resentCount"){
-    req.session.count = 0;
-  } else {
-    context.err = true;
-  }
-  context.count = req.session.count || 0;
-  req.session.count = context.count + 1;
-  res.render('counter', context);
-});
-
-
-*/
 
 app.use(function(req,res){
   res.status(404);
@@ -101,3 +182,7 @@ app.use(function(err,req,res,next){
 app.listen(app.get('port'), function () {
   console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
 });
+
+
+
+
