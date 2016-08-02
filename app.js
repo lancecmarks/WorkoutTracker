@@ -89,7 +89,7 @@ app.post('/',function(req, res, next){
           return;
         }
         console.log(rows);
-        context.workoutLog = rows[0];
+        context.workoutLog = rows[0].RowDataPacket;
         console.log('Post Insert Updated Context:');
         console.log(context);      
         res.render('home',context);
