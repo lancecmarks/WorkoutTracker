@@ -133,7 +133,7 @@ app.post('/',function(req, res, next){
       console.log('>> updatedLog: ', context);
       pool.query('UPDATE workoutLog SET name=?, reps=?, weight=?, date=?, scale=? WHERE id = ?',
           [req.body.name || context.updatedLog.name, req.body.reps || context.updatedLog.reps,
-          req.body.weight || context.updatedLog.weight, req.body.date || context.updatedLog.date,
+          req.body.weight || context.updatedLog.weight, !!req.body.date || context.updatedLog.date,
           req.body.scale || context.updatedLog.scale, req.body.id], function(err, result){
             if(err){
               next(err);
