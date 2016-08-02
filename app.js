@@ -101,28 +101,22 @@ app.post('/',function(req, res, next){
   //check for edit of workout
   if(req.body.EditWorkout){
     console.log('Inside EditWorkout');
-    for (var log in req.session.workoutLog) {
-      if (req.session.workoutLog.hasOwnProperty(log)){
-        console.log('Log:');
-        console.log(log);
-        if (req.session.workoutLog[log].id===req.body.id){
-          console.log('ID#:');
-          console.log(req.session.workoutLog[log]);
-          context[edit].name = req.session.workoutLog[log].name;
-          context[edit].reps = req.session.workoutLog[log].reps;
-          context[edit].weight = req.session.workoutLog[log].weight;
-          context[edit].date = req.session.workoutLog[log].date;
-          context[edit].scale = req.session.workoutLog[log].scale;
-        }
+    var idEdit = [req.body.id];
+    pool.query('SELECT * FROM workoutLog WHERE id = ?',[idEdit], function(err, rows, fields){
+      if(err){
+        next(err);
+        return;
       }
-    }
-    context.workoutLog = req.session.workoutLog;
-    console.log('Entire log copied:');
-    console.log(context);
-    res.render('edit',context);
-    return;
+      console.log('>>Urows: ',rows);
+      var editRows = JSON.stringify(rows);
+      console.log('>> editRows: ', editRows);
+      context.editedLog = JSON.parse(curRows);
+      console.log('Post Update Updated Context:');
+      console.log(context);      
+      res.render('edit',context);
+    });
   }
- 
+    
   //check Update for values
   if(req.body.ProcessWorkout){
     var idUpdate = [req.body.id];
