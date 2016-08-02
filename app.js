@@ -135,7 +135,7 @@ app.post('/',function(req, res, next){
       console.log('>>Urows: ',rows);
       var curRows = JSON.stringify(rows);
       console.log('>> curRows: ', curRows);
-      var context.updatedLog = JSON.parse(curRows);
+      context.updatedLog = JSON.parse(curRows);
       pool.query('UPDATE workoutLog SET name=?, reps=?, weight=?, date=?, scale=? WHERE id = ?',
           [req.body.name || context.updatedLog.name, req.body.reps || context.updatedLog.reps,
           req.body.weight || context.updatedLog.weight, || req.body.date || context.updatedLog.date,
@@ -150,7 +150,7 @@ app.post('/',function(req, res, next){
               return;
             }
             console.log('>>rows: ',rows);
-            var curRows = JSON.stringify(rows);
+            curRows = JSON.stringify(rows);
             console.log('>> curUSRows: ', stringRows);
             context.workoutLog = JSON.parse(stringRows);
             console.log('Post Update Updated Context:');
