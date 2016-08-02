@@ -28,7 +28,7 @@ var handlers = {
         date:null,
         scale:null
       };
-      body.AddWorkout = document.getElementByID("entryButton").value;
+      body.AddWorkout = document.getElementById("entryButton").value;
       body.name = document.getElementById("entryName").value;
       body.reps = document.getElementById("entryReps").value;
       body.weight = document.getElementById("entryWeight").value;
