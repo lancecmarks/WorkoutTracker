@@ -1,23 +1,24 @@
   <div id="workoutEdit">
     <form action="/" method="post">
       <fieldset>
-        <legend>Workout Entry Form</legend>
-        <input type="hidden" name="id" value="{{editedLog.id}}">
+        <legend>Workout Edit Form</legend>
+    {{#each editedLog}}
+        <input type="hidden" name="id" value="{{this.id}}">
         <label for="name">Name:</label>
-        <input type="text" name="name" id="entryName" value="{{editedLog.name}}" required>*required<br>
+        <input type="text" name="name" id="entryName" value="{{this.name}}" required>*required<br>
        
         <label for="reps">Reps:</label>
-        <input type="number" name="reps" id="entryReps" value="{{editedLog.reps}}"><br>
+        <input type="number" name="reps" id="entryReps" value="{{this.reps}}"><br>
        
         <label for="weight">Weight:</label>
-        <input type="number" name="weight" id="entryWeight" value="{{editedLog.weight}}"><br>
+        <input type="number" name="weight" id="entryWeight" value="{{this.weight}}"><br>
        
         <label for="date">Date:</label>
-        <input type="date" name="date" id="entryDate" value="{{editedLog.date}}"><br>
+        <input type="date" name="date" id="entryDate" value="{{this.date}}"><br>
        
         <label for="scale">Units:</label>
-        <input type="number" name="scale" value="{{editedLog.scale}}" id="entryUnits0">0 = lbs 1 = kgs
-        
+        <input type="number" name="scale" value="{{this.scale}}" id="entryUnits0">0 = lbs 1 = kgs
+    {{/each}}
         <button type="submit" name="ProcessWorkout" value="ProcessWorkout">Submit</button>
       </fieldset>
     </form>
