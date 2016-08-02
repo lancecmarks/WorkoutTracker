@@ -88,8 +88,12 @@ app.post('/',function(req, res, next){
           next(err);
           return;
         }
-        console.log(rows);
-        context.workoutLog = rows[0].RowDataPacket;
+        console.log('>>rows: ',rows);
+        var stringRows = JSON.stringify(rows);
+        console.log('>> stringRows: ', stringRows);
+        var jsonRows = JSON.parse(stringRows);
+        console.log('>> jsonRows: ', jsonRows);
+        context.workoutLog = jsonRows;
         console.log('Post Insert Updated Context:');
         console.log(context);      
         res.render('home',context);
