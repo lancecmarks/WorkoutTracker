@@ -12,8 +12,8 @@ var handlers = {
     console.log("I WAS CLICKED");
     var xhr = new XMLHttpRequest();
     xhr.callback = fCallback;
-    xhr.onload = xhrSuccess;
-    xhr.onerror = xhrError;
+    xhr.onload = this.xhrSuccess;
+    xhr.onerror = this.xhrError;
     xhr.open('post',url,true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(payload));
