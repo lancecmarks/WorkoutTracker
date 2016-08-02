@@ -91,9 +91,7 @@ app.post('/',function(req, res, next){
         console.log('>>rows: ',rows);
         var stringRows = JSON.stringify(rows);
         console.log('>> stringRows: ', stringRows);
-        var jsonRows = JSON.parse(stringRows);
-        console.log('>> jsonRows: ', jsonRows);
-        context.workoutLog = jsonRows;
+        context.workoutLog = JSON.parse(stringRows);
         console.log('Post Insert Updated Context:');
         console.log(context);      
         res.render('home',context);
@@ -138,7 +136,10 @@ app.post('/',function(req, res, next){
           next(err);
           return;
         }
-        context.workoutLog = JSON.stringify(rows);
+        console.log('>>rows: ',rows);
+        var stringRows = JSON.stringify(rows);
+        console.log('>> stringRows: ', stringRows);
+        context.workoutLog = JSON.parse(stringRows);
         console.log('Post Delete Updated Context:');
         console.log(context);      
         res.render('home',context);
