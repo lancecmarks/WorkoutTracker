@@ -146,8 +146,8 @@ app.post('/',function(req, res, next){
             }
             console.log('>>rows: ',rows);
             curRows = JSON.stringify(rows);
-            console.log('>> curUSRows: ', stringRows);
-            context.workoutLog = JSON.parse(stringRows);
+            console.log('>> curUSRows: ', curRows);
+            context.workoutLog = JSON.parse(curRows);
             console.log('Post Update Updated Context:');
             console.log(context);      
             res.render('home',context);
