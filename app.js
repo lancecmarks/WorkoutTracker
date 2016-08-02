@@ -90,7 +90,7 @@ app.post('/',function(req, res, next){
           return;
         }
         console.log('>>rows: ',rows);
-        var stringRows = JSON.stringify(rows);
+        var stringRows = JSON.stringify(rows);  //<------------OBJECT TO SEND BACK TO AJAX
         console.log('>> stringRows: ', stringRows);
         context.workoutLog = JSON.parse(stringRows);
         console.log('Post Insert Updated Context:');
