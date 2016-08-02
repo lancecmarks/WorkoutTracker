@@ -11,9 +11,16 @@ var handlers = {
   loadFile: function(url, payload, fCallback /*, argumentToPass1, argumentToPass2, etc. */) {
     console.log("I WAS CLICKED");
     var xhr = new XMLHttpRequest();
-    xhr.callback = fCallback;
-    xhr.onload = this.xhrSuccess;
-    xhr.onerror = this.xhrError;
+    xhr.addEventListener('load',function(){
+      if(xhr.status>=200&&xhr.status<400){
+        console.log("STATUS IS A GO!");
+        var response = JSON.parse(xhr.responseText);
+        console.log("CALLING DRAWTABLE WITH: ",response);
+        this.drawTable(response);
+      } else {
+        console.log("Error in network request: " + request.statusText);
+      }
+    });
     xhr.open('post',url,true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(payload));
@@ -35,16 +42,16 @@ var handlers = {
       body.date = document.getElementById("entryDate").value;
       body.scale = document.getElementById("entryScale").value;
       
-      this.loadFile('/', body, this.drawTable); 
+      this.loadFile('/', body); 
 
   },
 
 
-  drawTable: function() {
+  drawTable: function(serverResponse) {
       //draw the table from the server response
       //append to the table as a new child row
       //in a loop for all rowa
-      var workoutLog = JSON.parse(this.responseText);
+      var workoutLog = serverResponse;
       console.log('>>drawTableresponse: ',workoutLog);
       
       var workoutTable = document.getElementById("workoutTable");

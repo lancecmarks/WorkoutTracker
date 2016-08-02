@@ -95,7 +95,9 @@ app.post('/',function(req, res, next){
         context.workoutLog = JSON.parse(stringRows);
         console.log('Post Insert Updated Context:');
         console.log(context);      
-        res.render('home',context);
+        res.writeHead(200,{'Content-Type': 'text/plain'});
+        console.log("MESSAGE SENT BACK BY SERVER!!");
+        res.end(context);
       });
     });
   }
