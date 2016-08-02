@@ -29,24 +29,13 @@ var handlers = {
     console.error(this.statusText);
   },
 
-  loadFile: function(url, timeout, payload, fCallback /*, argumentToPass1, argumentToPass2, etc. */) {
-    var args = arguments.slice(2);
+  loadFile: function(url, payload, fCallback /*, argumentToPass1, argumentToPass2, etc. */) {
     var xhr = new XMLHttpRequest();
-    xhr.ontimeout = function () {
-      console.error('The request for ' + url + ' timed out.');
-    };
-    xhr.onload = function() {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          callback.apply(xhr, args);
-        } else {
-          console.error(xhr.statusText);
-        }
-      }
-    };
+    xhr.callback = fCallback;
+    xhr.onload = xhrSuccess;
+    xhr.onerror = xhrError;
     xhr.open('post',url,true);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.timeout = timeout;
     xhr.send(JSON.stringify(payload));
   },
 
