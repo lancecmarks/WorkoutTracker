@@ -8,7 +8,7 @@ var handlers = {
     console.error(this.statusText);
   },
 
-  loadFile: function(url, payload, fCallback /*, argumentToPass1, argumentToPass2, etc. */) {
+  loadFile: function(url, payload, callback /*, argumentToPass1, argumentToPass2, etc. */) {
     console.log("I WAS CLICKED");
     var xhr = new XMLHttpRequest();
     xhr.addEventListener('load',function(){
@@ -16,7 +16,7 @@ var handlers = {
         console.log("STATUS IS A GO!");
         var response = JSON.parse(xhr.responseText);
         console.log("CALLING DRAWTABLE WITH: ",response);
-        this.drawTable(response);
+        callback(response);
       } else {
         console.log("Error in network request: " + request.statusText);
       }
@@ -42,7 +42,7 @@ var handlers = {
       body.date = document.getElementById("entryDate").value;
       body.scale = document.getElementById("entryScale").value;
       
-      this.loadFile('/', body); 
+      this.loadFile('/', body, this.drawTable); 
 
   },
 

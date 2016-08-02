@@ -92,12 +92,10 @@ app.post('/',function(req, res, next){
         console.log('>>rows: ',rows);
         var stringRows = JSON.stringify(rows[0]);  //<------------OBJECT TO SEND BACK TO AJAX
         console.log('>> stringRows: ', stringRows);
-        context = stringRows;
         console.log('Post Insert Updated Context:');
-        console.log('>> context: ',context);      
         res.writeHead(200,{'Content-Type': 'text/plain'});
         console.log("MESSAGE SENT BACK BY SERVER!!");
-        res.end(context);
+        res.end(stringRows);
       });
     });
   }
