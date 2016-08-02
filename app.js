@@ -101,14 +101,13 @@ app.post('/',function(req, res, next){
   //check for edit of workout
   if(req.body.EditWorkout){
     console.log('Inside EditWorkout');
-    context.logExists = req.session.logExists;
     for (var log in req.session.workoutLog) {
       if (req.session.workoutLog.hasOwnProperty(log)){
         console.log('Log:');
         console.log(log);
         if (req.session.workoutLog[log].id===req.body.id){
           console.log('ID#:');
-          console.log(req.session.workoutLog[log][i]);
+          console.log(req.session.workoutLog[log]);
           context[edit].name = req.session.workoutLog[log].name;
           context[edit].reps = req.session.workoutLog[log].reps;
           context[edit].weight = req.session.workoutLog[log].weight;
@@ -123,6 +122,46 @@ app.post('/',function(req, res, next){
     res.render('edit',context);
     return;
   }
+ 
+  //check Update for values
+  if(req.body.ProcessWorkout){
+    var idUpdate = [req.body.id];
+    console.log('Inside ProcessWorkout');
+    pool.query('SELECT * FROM workoutLog WHERE id = ?',[idUpdate], function(err, rows, fields){
+      if(err){
+        next(err);
+        return;
+      }
+      console.log('>>Urows: ',rows);
+      var curRows = JSON.stringify(rows);
+      console.log('>> curRows: ', curRows);
+      var context.updatedLog = JSON.parse(curRows);
+      pool.query('UPDATE workoutLog SET name=?, reps=?, weight=?, date=?, scale=? WHERE id = ?',
+          [req.body.name || context.updatedLog.name, req.body.reps || context.updatedLog.reps,
+          req.body.weight || context.updatedLog.weight, || req.body.date || context.updatedLog.date,
+          req.body.scale || context.updatedLog.scale], function(err, result){
+            if(err){
+              next(err);
+              return;
+            }
+            pool.query('SELECT * FROM workoutLog', function(err, rows, fields){
+            if(err){
+              next(err);
+              return;
+            }
+            console.log('>>rows: ',rows);
+            var curRows = JSON.stringify(rows);
+            console.log('>> curUSRows: ', stringRows);
+            context.workoutLog = JSON.parse(stringRows);
+            console.log('Post Update Updated Context:');
+            console.log(context);      
+            res.render('home',context);
+            });
+      });
+    });
+  }
+
+  //check Delete
   if(req.body.DeleteWorkout){
     console.log('Inside DeleteWorkout');
     var idDelete = [req.body.id];
