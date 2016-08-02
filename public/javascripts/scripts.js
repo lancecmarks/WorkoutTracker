@@ -1,26 +1,5 @@
 var handlers = {
 
-  deactivateSubmit: function() {
-    document.getElementById('workoutForm').submit(function(event){
-      event.preventDefault();
-      event.stopPropagation();
-    });
-  },
-
-  deactivateButtons: function() {
-    var buttonElements = document.getElementsByClassName('submitButton');
-
-    for (var i = 0; i < buttonElements.length; i++) {
-
-      var button = buttonElements[i];
-
-      button.addEventListener('click', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-      });
-    }
-  },
-
   xhrSuccess : function() {
     this.callback.apply(this, this.arguments);
   },
@@ -30,6 +9,7 @@ var handlers = {
   },
 
   loadFile: function(url, payload, fCallback /*, argumentToPass1, argumentToPass2, etc. */) {
+    console.log("I WAS CLICKED");
     var xhr = new XMLHttpRequest();
     xhr.callback = fCallback;
     xhr.onload = xhrSuccess;
@@ -41,20 +21,21 @@ var handlers = {
 
   clickAddEntry: function() {
       var body = {
-        AddWorkout:'AddWorkout',
+        AddWorkout:null,
         name:null,
         reps:null,
         weight:null,
         date:null,
         scale:null
       };
+      body.AddWorkout = document.getElementByID("entryButton").value;
       body.name = document.getElementById("entryName").value;
       body.reps = document.getElementById("entryReps").value;
       body.weight = document.getElementById("entryWeight").value;
       body.date = document.getElementById("entryDate").value;
       body.scale = document.getElementById("entryScale").value;
       
-      this.loadFile('/', 2000, body, this.drawTable); 
+      this.loadFile('/', body, this.drawTable); 
 
   },
 
@@ -181,7 +162,3 @@ var handlers = {
 };
 
 
-
-
-window.addEventListener('load', handlers.deactivateSubmit);
-window.addEventListener('load', handlers.deactivateButtons);
