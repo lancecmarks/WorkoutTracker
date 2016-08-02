@@ -70,6 +70,7 @@ app.get('/',function(req, res, next) {
 });
 
 app.post('/',function(req, res, next){
+  console.log(req);
   console.log('Inside the Post');
   var context = {};
   //going to add new entry and then update context before render
