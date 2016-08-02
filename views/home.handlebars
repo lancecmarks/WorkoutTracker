@@ -1,5 +1,5 @@
   <div id="workoutEntry">
-    <form action="/" method="post">
+    <form action="/" method="post" id="workoutForm">
       <fieldset>
         <legend>Workout Entry Form</legend>
         <label for="name">Name:</label>
@@ -17,7 +17,7 @@
         <label for="scale">Units:</label>
         <input type="number" name="scale" id="entryUnits" >0 = lbs 1 = kgs<br>
         
-        <button type="submit" name="AddWorkout" value="AddWorkout">Submit</button>
+        <button type="submit" name="AddWorkout" value="AddWorkout" class="submitButton">Submit</button>
       </fieldset>
     </form>
   </div>
@@ -43,11 +43,11 @@
         <td>
           <form action="/" method="post">
             <input type="hidden" name="id" value="{{this.id}}">
-            <button type="submit" name="EditWorkout" value="EditWorkout">Edit</button>
+            <button type="submit" name="EditWorkout" value="EditWorkout" class="submitButton">Edit</button>
           </form>
           <form action="/" method="post">
             <input type="hidden" name="id" value="{{this.id}}">
-            <button type="submit" name="DeleteWorkout" value="DeleteWorkout">Delete</button>
+            <button type="submit" name="DeleteWorkout" value="DeleteWorkout" class="submitButton">Delete</button>
           </form>
         </td>
       </tr>

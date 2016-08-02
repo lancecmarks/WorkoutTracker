@@ -1,5 +1,5 @@
   <div id="workoutEdit">
-    <form action="/" method="post">
+    <form action="/" method="post" id="workoutForm">
       <fieldset>
         <legend>Workout Edit Form</legend>
     {{#each editedLog}}
@@ -19,7 +19,7 @@
         <label for="scale">Units:</label>
         <input type="number" name="scale" value="{{this.scale}}" id="entryUnits0">0 = lbs 1 = kgs
     {{/each}}
-        <button type="submit" name="ProcessWorkout" value="ProcessWorkout">Submit</button>
+        <button type="submit" name="ProcessWorkout" value="ProcessWorkout" class="submitButton">Submit</button>
       </fieldset>
     </form>
   </div>
