@@ -50,8 +50,7 @@ var handlers = {
     xhr.send(JSON.stringify(payload));
   },
 
-  bindAddEntry: function() {
-    document.getElementById("entryButton").addEventListener('click', function(event){
+  clickAddEntry: function() {
       var body = {
         AddWorkout:'AddWorkout',
         name:null,
@@ -68,7 +67,6 @@ var handlers = {
       
       this.loadFile('/', 2000, body, this.drawTable); 
 
-    });
   },
 
 
@@ -198,4 +196,3 @@ var handlers = {
 
 window.addEventListener('load', handlers.deactivateSubmit);
 window.addEventListener('load', handlers.deactivateButtons);
-window.addEventListener('load', handlers.bindAddEntry);
