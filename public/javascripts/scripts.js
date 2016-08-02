@@ -1,9 +1,9 @@
 var handlers = {
 
   deactivateSubmit: function() {
-    document.getElementByID('workoutForm').submit(function(event){
+    document.getElementById('workoutForm').submit(function(event){
       event.preventDefault();
-      event.stopPropogation();
+      event.stopPropagation();
     });
   },
 
@@ -16,7 +16,7 @@ var handlers = {
 
       button.addEventListener('click', function(event) {
         event.preventDefault();
-        event.stopPropogation();
+        event.stopPropagation();
       });
     }
   },
@@ -66,7 +66,7 @@ var handlers = {
       body.date = document.getElementById("entryDate").value;
       body.scale = document.getElementById("entryScale").value;
       
-      loadFile('/', 2000, body, drawTable); 
+      this.loadFile('/', 2000, body, this.drawTable); 
 
     });
   },
