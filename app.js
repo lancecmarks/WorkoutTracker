@@ -90,11 +90,11 @@ app.post('/',function(req, res, next){
           return;
         }
         console.log('>>rows: ',rows);
-        var stringRows = JSON.stringify(rows);  //<------------OBJECT TO SEND BACK TO AJAX
+        var stringRows = JSON.stringify(rows[0]);  //<------------OBJECT TO SEND BACK TO AJAX
         console.log('>> stringRows: ', stringRows);
-        context.workoutLog = JSON.parse(stringRows);
+        context = stringRows;
         console.log('Post Insert Updated Context:');
-        console.log(context);      
+        console.log('>> context: ',context);      
         res.writeHead(200,{'Content-Type': 'text/plain'});
         console.log("MESSAGE SENT BACK BY SERVER!!");
         res.end(context);
