@@ -110,7 +110,7 @@ app.post('/',function(req, res, next){
       console.log('>>Urows: ',rows);
       var editRows = JSON.stringify(rows);
       console.log('>> editRows: ', editRows);
-      context.editedLog = JSON.parse(curRows);
+      context.editedLog = JSON.parse(editRows);
       console.log('Post Update Updated Context:');
       console.log(context);      
       res.render('edit',context);
