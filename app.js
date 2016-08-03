@@ -87,7 +87,7 @@ app.post('/',function(req, res, next){
         return;
       }
       console.log(result);
-      pool.query('SELECT * FROM workoutLog', function(err, rows, fields){
+      pool.query("SELECT id, name,reps,weight,DATE_FORMAT(date,'%Y-%m-%d') AS date, scale FROM workoutLog", function(err, rows, fields){
         if(err){
           next(err);
           return;
@@ -106,7 +106,7 @@ app.post('/',function(req, res, next){
   if(req.body.EditWorkout){
     console.log('Inside EditWorkout');
     var idEdit = [req.body.id];
-    pool.query('SELECT * FROM workoutLog WHERE id = ?',[idEdit], function(err, rows, fields){
+    pool.query("SELECT id, name, reps, weight, DATE_FORMAT(date,'%Y-%m-%d') AS date, scale FROM workoutLog WHERE id = ?",[idEdit], function(err, rows, fields){
       if(err){
         next(err);
         return;
@@ -116,14 +116,13 @@ app.post('/',function(req, res, next){
       console.log('>> JSONstringify: ', editRows);
       context.editedLog = JSON.parse(editRows);
       console.log('>> JSONparse: ', context.editedLog);
-      var dateEdit = context.editedLog[0].date;
-      console.log('>> datePreSlice: ', dateEdit);
-      dateEdit = dateEdit.toISOString().substring(0,10);
-      console.log('>> datePostSlice: ',dateEdit);
-      context.editedLog[0].date = dateEdit;
+      //var dateEdit = context.editedLog[0].date;
+      //console.log('>> datePreSlice: ', dateEdit);
+      //dateEdit = dateEdit.toISOString().substring(0,10);
+      //console.log('>> datePostSlice: ',dateEdit);
+      //context.editedLog[0].date = dateEdit;
       console.log('Post Update Updated Context:');
       console.log(context);      
-
       res.render('edit',context);
     });
   }
@@ -132,7 +131,7 @@ app.post('/',function(req, res, next){
   if(req.body.ProcessWorkout){
     var idUpdate = [req.body.id];
     console.log('Inside ProcessWorkout');
-    pool.query('SELECT * FROM workoutLog WHERE id = ?',[idUpdate], function(err, rows, fields){
+    pool.query("SELECT id, name, reps, weight, DATE_FORMAT(date,'%Y-%m-%d') AS date, scale FROM workoutLog WHERE id = ?",[idUpdate], function(err, rows, fields){
       if(err){
         next(err);
         return;
@@ -143,7 +142,7 @@ app.post('/',function(req, res, next){
       context.updatedLog = JSON.parse(curRows);
       console.log('>> updatedLog: ', context);
       console.log('>> req.body: ', req.body);
-      if (req.body.date!==null){
+      if (req.body.date!==''){
         context.updatedLog.date = req.body.date;  // this is for the date issue of mySQL
       }
       pool.query('UPDATE workoutLog SET name=?, reps=?, weight=?, date=?, scale=? WHERE id = ?',
@@ -154,7 +153,7 @@ app.post('/',function(req, res, next){
               next(err);
               return;
             }
-            pool.query('SELECT * FROM workoutLog', function(err, rows, fields){
+            pool.query("SELECT id, name, reps, weight, DATE_FORMAT(date,'%Y-%m-%d') AS date, scale  FROM workoutLog", function(err, rows, fields){
             if(err){
               next(err);
               return;
@@ -178,7 +177,7 @@ app.post('/',function(req, res, next){
         next(err);
         return;
       }
-      pool.query('SELECT * FROM workoutLog', function(err, rows, fields){
+      pool.query("SELECT id, name, reps, weight, DATE_FORMAT(date,'%Y-%m-%d') AS date, scale FROM workoutLog", function(err, rows, fields){
         if(err){
           next(err);
           return;
