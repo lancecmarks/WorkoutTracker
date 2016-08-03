@@ -46,12 +46,12 @@ var handlers = {
 
   },
 
-  clickDeleteEntry: function() {
+  clickDeleteEntry: function(item) {
     var body = {
       DeleteWorkout: "DeleteWorkout",
       id: null
     };
-    body.id  = document.getElementById(this).previousSibling.value;
+    body.id  = item;
 
     this.loadFile('/', body, this.drawTable);
   },
@@ -173,7 +173,7 @@ var handlers = {
         formButtonDeleteClass.value = "submitButton";
         formButtonDelete.setAttributeNode(formButtonDeleteClass);
         var formButtonDeleteOnClick = document.createAttribute("onclick");
-        formButtonDeleteOnClick.value = "clickDeleteEntry.call(this)";
+        formButtonDeleteOnClick.value = "clickDeleteEntry(" + workoutLog[i].id + ")";
         formButtonDelete.setAttributeNode(formButtonDeleteOnClick);
         formButtonDelete.textContent = "Delete";
         formDelete.appendChild(formButtonDelete);
