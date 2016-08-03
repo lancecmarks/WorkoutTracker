@@ -61,7 +61,8 @@ app.get('/',function(req, res, next) {
       next(err);
       return;
     }
-  context.workoutLog = JSON.stringify(rows);
+  var getRows = JSON.stringify(rows);
+  context.workoutLog = JSON.parse(getRows);
   context.logExists = req.session.logExists;
   console.log('Get Updated Context:');
   console.log(context);      
@@ -158,9 +159,10 @@ app.post('/',function(req, res, next){
               next(err);
               return;
             }
-            context.workoutLog = JSON.stringify(rows);
+            var updatedRows = JSON.stringify(rows);
+            context.workoutLog = JSON.parse(updatedRows);
             context.logExists = req.session.logExists;
-            console.log('Get Updated Context:');
+            console.log('Post Edit->Update Context:');
             console.log(context);      
             res.render('home',context);
             });
