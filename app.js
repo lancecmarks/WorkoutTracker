@@ -108,12 +108,15 @@ app.post('/',function(req, res, next){
         next(err);
         return;
       }
-      console.log('>>Urows: ',rows);
+      console.log('>>mySQLOut: ',rows);
       var editRows = JSON.stringify(rows);
-      console.log('>> editRows: ', editRows);
+      console.log('>> JSONstringify: ', editRows);
       context.editedLog = JSON.parse(editRows);
-      var dateEdit = context.editedLog.date.slice(0,-14);
+      console.log('>> JSONparse: ', context.editedLog);
+      var dateEdit = context.editedLog.date;
+      console.log('>> datePreSlice; ', dateEdit);
       dateEdit.slice(0,-14);
+      console.log('>> datePostSlice: ',dateEdit);
       context.editedLog = dateEdit;
       console.log('Post Update Updated Context:');
       console.log(context);      
