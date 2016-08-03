@@ -42,7 +42,10 @@ var handlers = {
       body.date = document.getElementById("entryDate").value;
       body.scale = document.getElementById("entryScale").value;
       
-      this.loadFile('/', body, this.drawTable); 
+      if (body.name!==''){
+        console.log('Workout Name Empty');
+        this.loadFile('/', body, this.drawTable); 
+      }
 
   },
 

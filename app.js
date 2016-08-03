@@ -76,6 +76,9 @@ app.post('/',function(req, res, next){
   //going to add new entry and then update context before render
   if(req.body.AddWorkout){
     console.log('Inside AddWorkout');
+    if (req.body.date===''){            //date error catch
+      req.body.date=null;
+    }
     var values = {name: req.body.name, reps: req.body.reps, weight: req.body.weight, date: req.body.date, 
       scale: req.body.scale};
     pool.query('Insert INTO workoutLog SET ?', values, function (err, result){
