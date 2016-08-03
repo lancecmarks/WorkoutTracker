@@ -55,7 +55,7 @@ var handlers = {
       console.log('>>drawTableresponse: ',workoutLog);
       
       var workoutTable = document.getElementById("workoutTable");
-      var workoutTableBody = document.getElementByID("workoutTableBody");
+      var workoutTableBody = document.getElementById("workoutTableBody");
       workoutTable.removeChild(workoutTableBody);
 
       var tableBody = document.createElement("tbody");
