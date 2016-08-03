@@ -70,7 +70,6 @@ app.get('/',function(req, res, next) {
 });
 
 app.post('/',function(req, res, next){
-  console.log(req);
   console.log('Inside the Post');
   var context = {};
   var stringRows;
@@ -133,6 +132,7 @@ app.post('/',function(req, res, next){
       console.log('>> curRows: ', curRows);
       context.updatedLog = JSON.parse(curRows);
       console.log('>> updatedLog: ', context);
+      console.log('>> req.body: ', req.body);
       if (req.body.date!==null){
         context.updatedLog.date = req.body.date;  // this is for the date issue of mySQL
       }
