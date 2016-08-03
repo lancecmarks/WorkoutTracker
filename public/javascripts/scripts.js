@@ -56,7 +56,6 @@ var handlers = {
     this.loadFile('/', body, this.drawTable);
   },
 
-
   drawTable: function(serverResponse) {
       //draw the table from the server response
       //append to the table as a new child row
@@ -124,7 +123,7 @@ var handlers = {
         
         var formButtonEdit = document.createElement("button");
         var formButtonEditType = document.createAttribute("type");
-        formButtonEditType.value = "button";
+        formButtonEditType.value = "submit";
         formButtonEdit.setAttributeNode(formButtonEditType);
         var formButtonEditName = document.createAttribute("name");
         formButtonEditName.value = "EditWorkout";
