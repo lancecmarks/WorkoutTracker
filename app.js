@@ -113,11 +113,11 @@ app.post('/',function(req, res, next){
       console.log('>> JSONstringify: ', editRows);
       context.editedLog = JSON.parse(editRows);
       console.log('>> JSONparse: ', context.editedLog);
-      var dateEdit = context.editedLog.date;
+      var dateEdit = context.editedLog[0].date;
       console.log('>> datePreSlice: ', dateEdit);
       dateEdit.slice(0,-14);
       console.log('>> datePostSlice: ',dateEdit);
-      context.editedLog = dateEdit;
+      context.editedLog[0].date = dateEdit;
       console.log('Post Update Updated Context:');
       console.log(context);      
 
