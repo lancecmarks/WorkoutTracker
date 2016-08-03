@@ -114,12 +114,13 @@ app.post('/',function(req, res, next){
       context.editedLog = JSON.parse(editRows);
       console.log('>> JSONparse: ', context.editedLog);
       var dateEdit = context.editedLog.date;
-      console.log('>> datePreSlice; ', dateEdit);
+      console.log('>> datePreSlice: ', dateEdit);
       dateEdit.slice(0,-14);
       console.log('>> datePostSlice: ',dateEdit);
       context.editedLog = dateEdit;
       console.log('Post Update Updated Context:');
       console.log(context);      
+
       res.render('edit',context);
     });
   }
