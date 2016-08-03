@@ -46,6 +46,16 @@ var handlers = {
 
   },
 
+  clickDeleteEntry: function() {
+    var body = {
+      DeleteWorkout: "DeleteWorkout",
+      id: null
+    };
+    body.id  = document.getElementById(this).previousSibling.value;
+
+    this.loadFile('/', body, this.drawTable);
+  },
+
 
   drawTable: function(serverResponse) {
       //draw the table from the server response
@@ -56,7 +66,10 @@ var handlers = {
       
       var workoutTable = document.getElementById("workoutTable");
       var workoutTableBody = document.getElementById("workoutTableBody");
-      workoutTable.removeChild(workoutTableBody);
+      if (workoutTableBody.id == "workoutTableBody"){
+        console.log('Old Table Removed');
+        workoutTable.removeChild(workoutTableBody);
+      }
 
       var tableBody = document.createElement("tbody");
       var tableBodyID = document.createAttribute("id");
@@ -159,6 +172,9 @@ var handlers = {
         var formButtonDeleteClass = document.createAttribute("class");
         formButtonDeleteClass.value = "submitButton";
         formButtonDelete.setAttributeNode(formButtonDeleteClass);
+        var formButtonOnClick = document.createAttribute("onclick");
+        formButtonDeleteOnClick.value = "clickDeleteEntry.call(this)";
+        formButtonDelete.setAttributeNode(formButtonOnClick);
         formButtonDelete.textContent = "Delete";
         formDelete.appendChild(formButtonDelete);
         tableButtonCell.appendChild(formDelete);
