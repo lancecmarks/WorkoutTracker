@@ -172,9 +172,9 @@ var handlers = {
         var formButtonDeleteClass = document.createAttribute("class");
         formButtonDeleteClass.value = "submitButton";
         formButtonDelete.setAttributeNode(formButtonDeleteClass);
-        var formButtonOnClick = document.createAttribute("onclick");
+        var formButtonDeleteOnClick = document.createAttribute("onclick");
         formButtonDeleteOnClick.value = "clickDeleteEntry.call(this)";
-        formButtonDelete.setAttributeNode(formButtonOnClick);
+        formButtonDelete.setAttributeNode(formButtonDeleteOnClick);
         formButtonDelete.textContent = "Delete";
         formDelete.appendChild(formButtonDelete);
         tableButtonCell.appendChild(formDelete);
