@@ -1,6 +1,5 @@
 var handlers = {
 
-
 /* -------------------------------------------------------------
  * loadFile() takes a url input as string, a payload input as
  * Javascript object, and a callback function.  It creates
@@ -12,9 +11,7 @@ var handlers = {
     var xhr = new XMLHttpRequest();
     xhr.addEventListener('load',function(){
       if(xhr.status>=200&&xhr.status<400){
-        console.log("STATUS IS A GO!");
         var response = JSON.parse(xhr.responseText);
-        console.log("CALLING DRAWTABLE WITH: ",response);
         callback(response);
       } else {
         console.log("Error in network request: " + request.statusText);
@@ -29,7 +26,7 @@ var handlers = {
  * clickAddEntry() takes no input, uses DOM search to find
  * needed values to update Javascript object before calling
  * the loadFile function. It also verifies a name was entered
- * for the workout.
+ * for the workout and handles some errors involving empty strings.
  * ----------------------------------------------------------*/
   clickAddEntry: function() {
 
@@ -48,8 +45,23 @@ var handlers = {
       body.date = document.getElementById("entryDate").value;
       body.scale = document.getElementById("entryScale").value;
       
+      if (body.reps===''){
+        body.reps = null;
+      }
+      
+      if (body.weight===''){
+        body.weight = null;
+      }
+
+      if (body.scale===''){
+        body.scale = null;
+      }
+      
+      if (body.scale<0||body.scale>1){
+        body.scale = null;
+      }
+
       if (body.name!==''){
-        console.log("Workout Name Not Empty");
         this.loadFile('/', body, this.drawTable); 
       }
 

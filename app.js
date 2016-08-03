@@ -39,7 +39,6 @@ app.get('/',function(req, res, next) {
     req.session.logExists = 1;
     pool.query('DROP TABLE IF EXISTS workoutLog', function(err){
       if(err){
-        console.log('Error at Drop Table');
         next(err);
         return;
       }
@@ -52,7 +51,6 @@ app.get('/',function(req, res, next) {
         'scale BOOLEAN)';
       pool.query(createString, function(err){
         if(err){
-          console.log('Error at Create Table');
           next(err);
           return;
         }
@@ -67,8 +65,6 @@ app.get('/',function(req, res, next) {
   var getRows = JSON.stringify(rows);
   context.workoutLog = JSON.parse(getRows);
   context.logExists = req.session.logExists;
-  console.log('Get Updated Context:');
-  console.log(context);      
   res.render('home',context);
   });
 });
@@ -80,7 +76,6 @@ app.get('/',function(req, res, next) {
  * checked for. Each call is asynchronous.
  * --------------------------------------------------------------------*/
 app.post('/',function(req, res, next){
-  console.log('Inside the Post');
   var context = {};
   var stringRows;
   
@@ -173,8 +168,6 @@ app.post('/',function(req, res, next){
             var updatedRows = JSON.stringify(rows);
             context.workoutLog = JSON.parse(updatedRows);
             context.logExists = req.session.logExists;
-            console.log('Post Edit->Update Context:');
-            console.log(context);      
             res.render('home',context);
             });
       });
@@ -216,7 +209,6 @@ app.get('/reset-table', function(req, res, next){
   var context = {};
   pool.query('DROP TABLE IF EXISTS workoutLog', function(err){
     if(err){
-      console.log('Error at Drop Table');
       next(err);
       return;
     }
@@ -229,7 +221,6 @@ app.get('/reset-table', function(req, res, next){
       'scale BOOLEAN)';
     pool.query(createString, function(err){
       if(err){
-        console.log('Error at Create Table');
         next(err);
         return;
       }
@@ -258,7 +249,7 @@ app.use(function(err,req,res,next){
  * Where the magic happens
  * ------------------------------------------------------------------*/
 app.listen(app.get('port'), function () {
-  console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
+  console.log('Express started on http://localhost:' + app.get('port') + ' or 52.41.83.28:2500 -  press Ctrl-C to terminate.');
 });
 
 
