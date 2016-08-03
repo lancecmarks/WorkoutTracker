@@ -118,7 +118,7 @@ app.post('/',function(req, res, next){
       console.log('>> JSONparse: ', context.editedLog);
       var dateEdit = context.editedLog[0].date;
       console.log('>> datePreSlice: ', dateEdit);
-      dateEdit.slice(0,-14);
+      dateEdit = dateEdit.toISOString().substring(0,10);
       console.log('>> datePostSlice: ',dateEdit);
       context.editedLog[0].date = dateEdit;
       console.log('Post Update Updated Context:');

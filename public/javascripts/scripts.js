@@ -43,7 +43,7 @@ var handlers = {
       body.scale = document.getElementById("entryScale").value;
       
       if (body.name!==''){
-        console.log('Workout Name Empty');
+        console.log("Workout Name Not Empty");
         this.loadFile('/', body, this.drawTable); 
       }
 
