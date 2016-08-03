@@ -45,11 +45,11 @@
         <td>
           <form action="/" method="post">
             <input type="hidden" name="id" value="{{this.id}}">
-            <button type="button" name="EditWorkout" value="EditWorkout" class="submitButton">Edit</button>
+            <button type="submit" name="EditWorkout" value="EditWorkout" class="submitButton">Edit</button>
           </form>
           <form action="/" method="post">
             <input type="hidden" name="id" value="{{this.id}}">
-            <button type="button" name="DeleteWorkout" value="DeleteWorkout" class="submitButton">Delete</button>
+            <button type="button" name="DeleteWorkout" value="DeleteWorkout" class="submitButton" onclick="handlers.clickDeleteEntry({{this.id}})">Delete</button>
           </form>
         </td>
       </tr>
