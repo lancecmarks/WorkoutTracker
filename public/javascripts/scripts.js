@@ -64,6 +64,7 @@ var handlers = {
       tableBody.setAttributeNode(tableBodyID);
 
       for (var i = 0; i<workoutLog.length; i++) {
+        console.log("In loop the for time: ",i);
         var tableRowBody = document.createElement("tr");
         
         var tableNameCell = document.createElement("td");
@@ -164,6 +165,7 @@ var handlers = {
         tableRowBody.appendChild(tableButtonCell);
         tableBody.appendChild(tableRowBody);
       }
+      workoutTable.appendChild(tableBody);
   }
 
 };
