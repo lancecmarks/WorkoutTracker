@@ -73,6 +73,7 @@ app.post('/',function(req, res, next){
   console.log(req);
   console.log('Inside the Post');
   var context = {};
+  var stringRows;
   //going to add new entry and then update context before render
   if(req.body.AddWorkout){
     console.log('Inside AddWorkout');
@@ -90,7 +91,7 @@ app.post('/',function(req, res, next){
           return;
         }
         console.log('>>rows: ',rows);
-        var stringRows = JSON.stringify(rows);  //<------------OBJECT TO SEND BACK TO AJAX
+        stringRows = JSON.stringify(rows);  //<------------OBJECT TO SEND BACK TO AJAX
         console.log('>> stringRows: ', stringRows);
         console.log('Post Insert Updated Context:');
         res.writeHead(200,{'Content-Type': 'text/plain'});
@@ -146,12 +147,12 @@ app.post('/',function(req, res, next){
               return;
             }
             console.log('>>rows: ',rows);
-            curRows = JSON.stringify(rows);
-            console.log('>> curUSRows: ', curRows);
-            context.workoutLog = JSON.parse(curRows);
-            console.log('Post Update Updated Context:');
-            console.log(context);      
-            res.render('home',context);
+            stringRows = JSON.stringify(rows);  //<------------OBJECT TO SEND BACK TO AJAX
+            console.log('>> stringRows: ', stringRows);
+            console.log('Post Insert Updated Context:');
+            res.writeHead(200,{'Content-Type': 'text/plain'});
+            console.log("MESSAGE SENT BACK BY SERVER!!");
+            res.end(stringRows);
             });
       });
     });
@@ -172,12 +173,12 @@ app.post('/',function(req, res, next){
           return;
         }
         console.log('>>rows: ',rows);
-        var stringRows = JSON.stringify(rows);
+        stringRows = JSON.stringify(rows);  //<------------OBJECT TO SEND BACK TO AJAX
         console.log('>> stringRows: ', stringRows);
-        context.workoutLog = JSON.parse(stringRows);
-        console.log('Post Delete Updated Context:');
-        console.log(context);      
-        res.render('home',context);
+        console.log('Post Insert Updated Context:');
+        res.writeHead(200,{'Content-Type': 'text/plain'});
+        console.log("MESSAGE SENT BACK BY SERVER!!");
+        res.end(stringRows);
       });
     });
   }
