@@ -90,7 +90,7 @@ app.post('/',function(req, res, next){
           return;
         }
         console.log('>>rows: ',rows);
-        var stringRows = JSON.stringify(rows[0]);  //<------------OBJECT TO SEND BACK TO AJAX
+        var stringRows = JSON.stringify(rows);  //<------------OBJECT TO SEND BACK TO AJAX
         console.log('>> stringRows: ', stringRows);
         console.log('Post Insert Updated Context:');
         res.writeHead(200,{'Content-Type': 'text/plain'});
