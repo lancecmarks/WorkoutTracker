@@ -34,8 +34,11 @@
           <th>Units</th>
         </tr>
       </thead>
+    
     <tbody id="workoutTableBody">
-    {{#each workoutLog}}
+   
+      {{!-- this is only used for the initial Get Request and coming back from Edit - all AJAX calls are built with javascript --}}
+      {{#each workoutLog}}
       <tr>
         <td>{{this.name}}</td>
         <td>{{this.reps}}</td>
@@ -54,6 +57,7 @@
         </td>
       </tr>
     {{/each}}
+    
     </tbody>
     </table> 
   

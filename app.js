@@ -9,14 +9,14 @@ var pool = mysql.createPool({
   password: 'default',
   database: 'student'
 });
-var session = require('express-session');
+var session = require('express-session');  //used for tracking if new user
 var bodyparser = require('body-parser');  //load body parser for POST
 
 app.use(express.static(__dirname + '/public'));  //serves up static files
 app.use(bodyparser.urlencoded({extended: true}));  //true allows for nested array like syntax
 app.use(bodyparser.json());                  //body parser now understands JSON
 app.use(session({
-  secret:'AppleGoatRainCow',
+  secret:'AppleGoatRainCow',  //xkcd.com/936 
   resave: true,
   saveUninitialized: true
 }));
@@ -27,9 +27,13 @@ app.set('view engine','handlebars');
 app.set('port',2500);
 
 
-
+/* -----------------------------------------------------------------
+ * app.get() is used in the initial website load and the return from 
+ * an Edit.  The application uses sessions to determine if the existing
+ * table should be dropped and a new table created. There is also the 
+ * reset table pathway below if desired but must manually be entered
+ * ----------------------------------------------------------------*/
 app.get('/',function(req, res, next) {
-  console.log('Inside the Get');
   var context = {};
   if(!req.session.logExists) {  //check if log exists, if not setup the structure
     req.session.logExists = 1;
@@ -52,11 +56,10 @@ app.get('/',function(req, res, next) {
           next(err);
           return;
         }
-        console.log('Table reset');
       });
     });
   }
-  pool.query('SELECT * FROM workoutLog', function(err, rows, fields){
+  pool.query("SELECT id, name, reps, weight, DATE_FORMAT(date, '%Y-%m-%d') AS date, scale FROM workoutLog", function(err, rows, fields){
     if(err){
       next(err);
       return;
@@ -70,82 +73,88 @@ app.get('/',function(req, res, next) {
   });
 });
 
+
+/* ----------------------------------------------------------------------
+ * app.post() receives the post requests from the front end of the 
+ * application.  There are several pathways inside the pipeline that are
+ * checked for. Each call is asynchronous.
+ * --------------------------------------------------------------------*/
 app.post('/',function(req, res, next){
   console.log('Inside the Post');
   var context = {};
   var stringRows;
-  //going to add new entry and then update context before render
+  
+/* ---------------------------------------
+ * Add New Workout Entry
+ * -------------------------------------*/
   if(req.body.AddWorkout){
-    console.log('Inside AddWorkout');
+    
     if (req.body.date===''){            //date error catch
       req.body.date=null;
     }
+    
     var values = {name: req.body.name, reps: req.body.reps, weight: req.body.weight, date: req.body.date, 
       scale: req.body.scale};
+    
     pool.query('Insert INTO workoutLog SET ?', values, function (err, result){
       if(err){
         next(err);
         return;
       }
-      console.log(result);
+      
       pool.query("SELECT id, name,reps,weight,DATE_FORMAT(date,'%Y-%m-%d') AS date, scale FROM workoutLog", function(err, rows, fields){
         if(err){
           next(err);
           return;
         }
-        console.log('>>rows: ',rows);
-        stringRows = JSON.stringify(rows);  //<------------OBJECT TO SEND BACK TO AJAX
-        console.log('>> stringRows: ', stringRows);
-        console.log('Post Insert Updated Context:');
+        
+        stringRows = JSON.stringify(rows); 
         res.writeHead(200,{'Content-Type': 'text/plain'});
-        console.log("MESSAGE SENT BACK BY SERVER!!");
         res.end(stringRows);
       });
     });
   }
-  //check for edit of workout
+
+/* ---------------------------------------
+ * Edit Workout Entry
+ * -------------------------------------*/
   if(req.body.EditWorkout){
-    console.log('Inside EditWorkout');
+    
     var idEdit = [req.body.id];
-    pool.query("SELECT id, name, reps, weight, DATE_FORMAT(date,'%Y-%m-%d') AS date, scale FROM workoutLog WHERE id = ?",[idEdit], function(err, rows, fields){
+    pool.query("SELECT id, name, reps, weight, DATE_FORMAT(date,'%Y-%m-%d') AS date, scale FROM workoutLog WHERE id = ?",
+        [idEdit], function(err, rows, fields){
+      
       if(err){
         next(err);
         return;
       }
-      console.log('>>mySQLOut: ',rows);
+
       var editRows = JSON.stringify(rows);
-      console.log('>> JSONstringify: ', editRows);
       context.editedLog = JSON.parse(editRows);
-      console.log('>> JSONparse: ', context.editedLog);
-      //var dateEdit = context.editedLog[0].date;
-      //console.log('>> datePreSlice: ', dateEdit);
-      //dateEdit = dateEdit.toISOString().substring(0,10);
-      //console.log('>> datePostSlice: ',dateEdit);
-      //context.editedLog[0].date = dateEdit;
-      console.log('Post Update Updated Context:');
-      console.log(context);      
       res.render('edit',context);
     });
   }
     
-  //check Update for values
+/* ---------------------------------------
+ * Update Edited Workout Entry
+ * -------------------------------------*/
   if(req.body.ProcessWorkout){
     var idUpdate = [req.body.id];
-    console.log('Inside ProcessWorkout');
-    pool.query("SELECT id, name, reps, weight, DATE_FORMAT(date,'%Y-%m-%d') AS date, scale FROM workoutLog WHERE id = ?",[idUpdate], function(err, rows, fields){
+    pool.query("SELECT id, name, reps, weight, DATE_FORMAT(date,'%Y-%m-%d') AS date, scale FROM workoutLog WHERE id = ?",
+        [idUpdate], function(err, rows, fields){
+      
       if(err){
         next(err);
         return;
       }
-      console.log('>>Urows: ',rows);
+      
       var curRows = JSON.stringify(rows);
-      console.log('>> curRows: ', curRows);
       context.updatedLog = JSON.parse(curRows);
-      console.log('>> updatedLog: ', context);
-      console.log('>> req.body: ', req.body);
-      if (req.body.date!==''){
-        context.updatedLog.date = req.body.date;  // this is for the date issue of mySQL
+      
+      if (req.body.date!==''){         //check for empty string in date
+        context.updatedLog.date = req.body.date;  
       }
+      
       pool.query('UPDATE workoutLog SET name=?, reps=?, weight=?, date=?, scale=? WHERE id = ?',
           [req.body.name || context.updatedLog.name, req.body.reps || context.updatedLog.reps,
           req.body.weight || context.updatedLog.weight, context.updatedLog.date,
@@ -154,11 +163,13 @@ app.post('/',function(req, res, next){
               next(err);
               return;
             }
+            
             pool.query("SELECT id, name, reps, weight, DATE_FORMAT(date,'%Y-%m-%d') AS date, scale  FROM workoutLog", function(err, rows, fields){
             if(err){
               next(err);
               return;
             }
+            
             var updatedRows = JSON.stringify(rows);
             context.workoutLog = JSON.parse(updatedRows);
             context.logExists = req.session.logExists;
@@ -170,32 +181,37 @@ app.post('/',function(req, res, next){
     });
   }
 
-  //check Delete
+/* ---------------------------------------
+ * Delete Workout Entry
+ * -------------------------------------*/
   if(req.body.DeleteWorkout){
-    console.log('Inside DeleteWorkout');
     var idDelete = [req.body.id];
+    
     pool.query('DELETE FROM workoutLog WHERE id =  ?',[idDelete], function(err, result){
       if(err){
         next(err);
         return;
       }
+      
       pool.query("SELECT id, name, reps, weight, DATE_FORMAT(date,'%Y-%m-%d') AS date, scale FROM workoutLog", function(err, rows, fields){
         if(err){
           next(err);
           return;
         }
-        console.log('>>rows: ',rows);
+        
         stringRows = JSON.stringify(rows);  //<------------OBJECT TO SEND BACK TO AJAX
-        console.log('>> stringRows: ', stringRows);
-        console.log('Post Insert Updated Context:');
         res.writeHead(200,{'Content-Type': 'text/plain'});
-        console.log("MESSAGE SENT BACK BY SERVER!!");
         res.end(stringRows);
       });
     });
   }
 });
 
+/* -------------------------------------------------------------------
+ * app.get(/reset-table) is included in case the user/grader would like
+ * to clear the table manually instead of closing browser to remove
+ * Session log. 
+ * ------------------------------------------------------------------*/
 app.get('/reset-table', function(req, res, next){
   var context = {};
   pool.query('DROP TABLE IF EXISTS workoutLog', function(err){
@@ -223,6 +239,9 @@ app.get('/reset-table', function(req, res, next){
   });
 });
 
+/* -------------------------------------------------------------------
+ * Error handling at the bottom of the pipeline
+ * -----------------------------------------------------------------*/
 app.use(function(req,res){
   res.status(404);
   res.render('404');
@@ -235,6 +254,9 @@ app.use(function(err,req,res,next){
   res.render('500');
 });
 
+/* -------------------------------------------------------------------
+ * Where the magic happens
+ * ------------------------------------------------------------------*/
 app.listen(app.get('port'), function () {
   console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
 });

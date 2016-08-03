@@ -1,15 +1,14 @@
 var handlers = {
 
-  xhrSuccess : function() {
-    this.callback.apply(this, this.arguments);
-  },
 
-  xhrError: function() {
-    console.error(this.statusText);
-  },
+/* -------------------------------------------------------------
+ * loadFile() takes a url input as string, a payload input as
+ * Javascript object, and a callback function.  It creates
+ * a new XMLHttpRequest and asynchronously makes a POST
+ * passing the callback for the response.
+ * -----------------------------------------------------------*/
+  loadFile: function(url, payload, callback) {
 
-  loadFile: function(url, payload, callback /*, argumentToPass1, argumentToPass2, etc. */) {
-    console.log("I WAS CLICKED");
     var xhr = new XMLHttpRequest();
     xhr.addEventListener('load',function(){
       if(xhr.status>=200&&xhr.status<400){
@@ -26,7 +25,14 @@ var handlers = {
     xhr.send(JSON.stringify(payload));
   },
 
+/* -----------------------------------------------------------
+ * clickAddEntry() takes no input, uses DOM search to find
+ * needed values to update Javascript object before calling
+ * the loadFile function. It also verifies a name was entered
+ * for the workout.
+ * ----------------------------------------------------------*/
   clickAddEntry: function() {
+
       var body = {
         AddWorkout:null,
         name:null,
@@ -49,7 +55,12 @@ var handlers = {
 
   },
 
+/* -------------------------------------------------------------
+ * clickDeleteEntry()  takes input from row and updates a 
+ * Javascript object before calling the loadFile function
+ * -----------------------------------------------------------*/
   clickDeleteEntry: function(item) {
+
     var body = {
       DeleteWorkout: "DeleteWorkout",
       id: null
@@ -59,17 +70,23 @@ var handlers = {
     this.loadFile('/', body, this.drawTable);
   },
 
+
+/* --------------------------------------------------------------
+ * drawTable() takes a serverResponse object in the form of an 
+ * array of objects.  It creates the necessary html elements
+ * for displaying the array of objects and then attaches the
+ * table body to the table in the layout.
+ * ------------------------------------------------------------*/
   drawTable: function(serverResponse) {
-      //draw the table from the server response
-      //append to the table as a new child row
-      //in a loop for all rowa
+
       var workoutLog = serverResponse;
-      console.log('>>drawTableresponse: ',workoutLog);
       
+      //the anchor everything will be attached to
       var workoutTable = document.getElementById("workoutTable");
+      
+      //create item to check for old table and delete before new
       var workoutTableBody = document.getElementById("workoutTableBody");
       if (workoutTableBody.id == "workoutTableBody"){
-        console.log('Old Table Removed');
         workoutTable.removeChild(workoutTableBody);
       }
 
@@ -79,7 +96,6 @@ var handlers = {
       tableBody.setAttributeNode(tableBodyID);
 
       for (var i = 0; i<workoutLog.length; i++) {
-        console.log("In loop the for time: ",i);
         var tableRowBody = document.createElement("tr");
         
         var tableNameCell = document.createElement("td");
@@ -102,8 +118,10 @@ var handlers = {
         tableScaleCell.textContent = workoutLog[i].scale;
         tableRowBody.appendChild(tableScaleCell);
         
+        //create tablecell for buttons
         var tableButtonCell = document.createElement("td");
         
+        //create edit form
         var formEdit = document.createElement("form");
         var formEditAction = document.createAttribute("action");
         formEditAction.value = "/";
@@ -112,6 +130,7 @@ var handlers = {
         formEditMethod.value = "post";
         formEdit.setAttributeNode(formEditMethod);
         
+        //create edit hidden input and attach
         var formInputEdit = document.createElement("input");
         var formInputEditType = document.createAttribute("type");
         formInputEditType.value = "hidden";
@@ -124,6 +143,7 @@ var handlers = {
         formInputEdit.setAttributeNode(formInputEditValue);
         formEdit.appendChild(formInputEdit);
         
+        //create edit button and attach
         var formButtonEdit = document.createElement("button");
         var formButtonEditType = document.createAttribute("type");
         formButtonEditType.value = "submit";
@@ -132,7 +152,7 @@ var handlers = {
         formButtonEditName.value = "EditWorkout";
         formButtonEdit.setAttributeNode(formButtonEditName);
         var formButtonEditValue = document.createAttribute("value");
-        formButtonEditValue.value = "EditWorkout";                        //<----------- MIGHT BE A GOOD PLACE TO PASS ID VALUE;
+        formButtonEditValue.value = "EditWorkout"; 
         formButtonEdit.setAttributeNode(formButtonEditValue);
         var formButtonEditClass = document.createAttribute("class");
         formButtonEditClass.value = "submitButton";
@@ -141,6 +161,7 @@ var handlers = {
         formEdit.appendChild(formButtonEdit);
         tableButtonCell.appendChild(formEdit);
         
+        //create delete form
         var formDelete = document.createElement("form");
         var formDeleteAction = document.createAttribute("action");
         formDeleteAction.value = "/";
@@ -149,6 +170,7 @@ var handlers = {
         formDeleteMethod.value = "post";
         formDelete.setAttributeNode(formDeleteMethod);
         
+        //create delete hidden input and attach
         var formInputDelete = document.createElement("input");
         var formInputDeleteType = document.createAttribute("type");
         formInputDeleteType.value = "hidden";
@@ -161,6 +183,7 @@ var handlers = {
         formInputDelete.setAttributeNode(formInputDeleteValue);
         formDelete.appendChild(formInputDelete);
         
+        //create delete button and attach
         var formButtonDelete = document.createElement("button");
         var formButtonDeleteType = document.createAttribute("type");
         formButtonDeleteType.value = "button";
@@ -169,7 +192,7 @@ var handlers = {
         formButtonDeleteName.value = "DeleteWorkout";
         formButtonDelete.setAttributeNode(formButtonDeleteName);
         var formButtonDeleteValue = document.createAttribute("value");
-        formButtonDeleteValue.value = "DeleteWorkout";                        //<----------- MIGHT BE A GOOD PLACE TO PASS ID VALUE;
+        formButtonDeleteValue.value = "DeleteWorkout"; 
         formButtonDelete.setAttributeNode(formButtonDeleteValue);
         var formButtonDeleteClass = document.createAttribute("class");
         formButtonDeleteClass.value = "submitButton";
@@ -179,10 +202,14 @@ var handlers = {
         formButtonDelete.setAttributeNode(formButtonDeleteOnClick);
         formButtonDelete.textContent = "Delete";
         formDelete.appendChild(formButtonDelete);
+        
+        //attach button cell to tr then entire row to table body
         tableButtonCell.appendChild(formDelete);
         tableRowBody.appendChild(tableButtonCell);
         tableBody.appendChild(tableRowBody);
       }
+
+      //attach the table body to the table
       workoutTable.appendChild(tableBody);
   }
 

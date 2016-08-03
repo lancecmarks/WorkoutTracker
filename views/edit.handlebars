@@ -2,6 +2,7 @@
     <form action="/" method="post" id="workoutForm">
       <fieldset>
         <legend>Workout Edit Form</legend>
+        {{!-- used handlebars array templating for simplicity since ajax call not required --}}
     {{#each editedLog}}
         <input type="hidden" name="id" value="{{this.id}}">
         <label for="name">Name:</label>
