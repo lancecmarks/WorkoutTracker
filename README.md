@@ -1,2 +1,2 @@
-# Project
-CS290 Final Project - One Page Nodejs Application
+# One Page NodeJS Application - Workout Tracker
+Application uses NodeJS, ExpressJS, Handlebars, and MySQL
